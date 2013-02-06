@@ -73,11 +73,16 @@ class CsvReader implements ReaderInterface, \SeekableIterator
         // array for the columns in this line
         if (!empty($this->columnHeaders)) {
             // Count the number of elements in both: they must be equal.
-            // If not, ignore the row
             if (count($this->columnHeaders) == count($line)) {
                 return array_combine(array_values($this->columnHeaders), $line);
-            }
+            } else { // try filling array partially
+                $result = [];
+                foreach ($this->columnHeaders as $header) {
+                    $result[$header] = array_shift($line);
+                }
 
+                return $result;
+            }
 
         } else {
             // Else just return the column values
